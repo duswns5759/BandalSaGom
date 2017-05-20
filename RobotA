@@ -1,0 +1,39 @@
+#include "CurieIMU.h"
+#include <Servo.h>
+Servo servo1;
+Servo servo2; 
+#define Servo1Pin 5
+#define Servo2Pin 6
+
+void Accelerometer(){
+int x, y, z, accX, accY;
+x = CurieIMU.readAccelerometer(X_AXIS);   
+y = CurieIMU.readAccelerometer(Y_AXIS); 
+z = CurieIMU.readAccelerometer(Z_AXIS); 
+ if(x > 15000) x=13000;
+ if(x < -15000) x=-13000;
+ if(y > 15000)  x=13000;
+ if(y < -15000) x=-13000;
+ accX = map(x, -13000, 13000, 10, 169);
+ accY = map(y, -13000, 13000, 10, 169);
+ servo1.write(accX); 
+ servo2.write(accY);
+ Serial.print(accX);
+ Serial.print(" / ");
+ Serial.println(accY);
+ delay(100);
+ }
+ 
+void setup() { 
+Serial.begin(9600);    
+CurieIMU.begin();   
+CurieIMU.setAccelerometerRange(2);  
+pinMode(Servo1Pin, OUTPUT);  
+pinMode(Servo2Pin, OUTPUT);
+servo1.attach(Servo1Pin);
+servo2.attach(Servo2Pin);
+}
+
+void loop() {
+Accelerometer();
+}
